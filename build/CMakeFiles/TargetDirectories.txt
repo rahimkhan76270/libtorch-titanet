@@ -1,0 +1,3 @@
+/mnt/d/Programs/Python/PW/projects/libtorch/build/CMakeFiles/main.dir
+/mnt/d/Programs/Python/PW/projects/libtorch/build/CMakeFiles/edit_cache.dir
+/mnt/d/Programs/Python/PW/projects/libtorch/build/CMakeFiles/rebuild_cache.dir
