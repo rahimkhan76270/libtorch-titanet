@@ -4,9 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${default}",
-                "/mnt/c/libtorch/include",
-                "/mnt/c/libtorch/include/torch/csrc/api/include",
-                "/mnt/d/Programs/Python/PW/projects/libtorch/include"
+                "/home/rahim-khan/libtorch/include",
+                "/home/rahim-khan/libtorch/include/torch/csrc/api/include",
+                "/home/rahim-khan/Work/libtorch-titanet/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
