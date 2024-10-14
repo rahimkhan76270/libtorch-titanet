@@ -9,8 +9,6 @@ find_package(Torch REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/include ${TORCH_INCLUDE_DIRS})
 
 add_executable(main main.cpp)
-add_library(subblock src/subblock.cpp)
-add_library(prologue src/prologue.cpp)
-add_library(SqueezeExcitation src/SqueezeExcitation.cpp)
+add_library(net src/net.cpp)
 
-target_link_libraries(main "${TORCH_LIBRARIES}" subblock prologue SqueezeExcitation)
+target_link_libraries(main "${TORCH_LIBRARIES}" net)
