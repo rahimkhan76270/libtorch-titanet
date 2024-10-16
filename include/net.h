@@ -51,7 +51,7 @@ class MegaBlock: public torch::nn::Module{
         torch::nn::ReLU relu{nullptr};
         torch::nn::Conv1d pointwise_conv{nullptr};
         torch::nn::BatchNorm1d norm{nullptr};
-        torch::nn::ModuleHolder<SqueezeExcitation> se_block;
+        torch::nn::ModuleHolder<SqueezeExcitation> se_block{nullptr};
 
 };
 
