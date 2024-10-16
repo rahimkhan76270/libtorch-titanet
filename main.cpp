@@ -3,6 +3,7 @@
 #include<torch/extension.h>    
 #include "net.h"
 #include "read_audio.h"
+#include "spectrogram.h"
 
 using namespace std;
 int main() {
@@ -17,7 +18,9 @@ int main() {
     pair<vector<float>,int > samples_sample_rate=read_audio_file("/home/rahim-khan/Downloads/dev-other/LibriSpeech/dev-other/116/288045/116-288045-0001.flac");
     auto samples=torch::tensor(samples_sample_rate.first,torch::dtype(torch::kFloat32));
     int sample_rate=samples_sample_rate.second;
-    cout<<sample_rate<<endl;
-    cout<<samples<<endl;
+    // auto window = torch::hann_window(400);  // Apply Hann window
+    // auto stft_result = torch::stft(samples, 400, 160, 400, window, true, "reflect", false,false, true);  // Use return_complex=True?
+    auto spect=mel_spectrogram(samples,400,160,10,sample_rate);
+    cout<<spect<<endl;
     return 0;
 }
