@@ -35,89 +35,75 @@ torch::Tensor spectrogram(
     bool onesided
 );
 
-
-class Spectrogram : public torch::nn::Module {
-public:
-    Spectrogram(
-        int n_fft = 400,
-        int win_length = 400,
-        int hop_length = 160,
-        int pad = 0,
-        torch::Tensor window_fn = torch::Tensor(),
-        float power = 2.0,
-        bool normalized = false,
-        bool center = true,
-        string pad_mode = "reflect",
-        bool onesided = true
-    );
-
-    torch::Tensor forward(const torch::Tensor& waveform);
-
-private:
+struct MelSpectrogramParams {
+    int sample_rate;
     int n_fft;
     int win_length;
     int hop_length;
+    double f_min;
+    double f_max;
     int pad;
+    int n_mels;
     torch::Tensor window;
     float power;
     bool normalized;
     bool center;
-    string pad_mode;
     bool onesided;
-};
+    std::string pad_mode;
+    std::string norm;
+    std::string mel_scale;
+    MelSpectrogramParams(int sample_rate = 16000,
+                         int n_fft = 400,
+                         int win_length = 400,
+                         int hop_length = 200,
+                         double f_min = 0.0,
+                         double f_max = 8000.0,
+                         int pad = 0,
+                         int n_mels = 80,
+                         torch::Tensor window = torch::hann_window(400),
+                         float power = 2.0,
+                         bool normalized = false,
+                         bool center = true,
+                         bool onesided = true,
+                         std::string pad_mode = "reflect",
+                         std::string norm = "slaney",
+                         std::string mel_scale = "slaney");
+    };
 
-class MelScale : public torch::nn::Module{
-public:
-    MelScale(int n_mels, int sample_rate, double f_min, double f_max, int n_stft,string norm = "slaney",string mel_scale = "htk");
-    torch::Tensor forward(const torch::Tensor specgram);
+torch::Tensor mel_spectrogram(torch::Tensor waveform,
+                              int sample_rate=16000,
+                              int n_fft=400,
+                              int win_length=400,
+                              int hop_length=200,
+                              double f_min=0.0,
+                              double f_max=8000.0,
+                              int pad=0,
+                              int n_mels=80,
+                              torch::Tensor window=torch::hann_window(400),
+                              float power=2.0,
+                              bool normalized=false,
+                              bool center=true,
+                              bool onesided=true,
+                              string pad_mode="reflect",
+                              string norm="slaney",
+                              string mel_scale="htk");
 
-private:
-    int n_mels_;
-    int sample_rate_;
-    double f_min_;
-    double f_max_;
-    std::string norm_;
-    std::string mel_scale_;
-    torch::Tensor fb_;
-};
+torch::Tensor mel_spectrogram(torch::Tensor waveform, const MelSpectrogramParams& params);
 
-class MelSpectrogram : public torch::nn::Module {
-public:
-    MelSpectrogram(
-        int sample_rate = 16000,
-        int n_fft = 400,
-        int win_length = 400,
-        int hop_length = 160,
-        double f_min = 0.0,
-        double f_max = 8000.0,
-        int pad = 0,
-        int n_mels = 128,
-        torch::Tensor window_fn = torch::hann_window(400),
-        float power = 2.0,
-        bool normalized = false,
-        std::string pad_mode = "reflect",
-        std::string norm = "slaney",
-        std::string mel_scale = "htk"
-    );
+torch::Tensor amplitude_to_DB(
+    torch::Tensor x,
+    float multiplier,
+    float amin,
+    float db_multiplier,
+    std::optional<float> top_db = std::nullopt);
 
-    torch::Tensor forward(torch::Tensor waveform);
+torch::Tensor create_dct(int n_mfcc, int n_mels, std::optional<std::string> norm = std::nullopt);
+torch::Tensor MFCC(torch::Tensor& waveform,
+                    const MelSpectrogramParams& params,
+                    int n_mfcc=40,
+                    int dct_type=2,
+                    float top_db=80,
+                    string norm="ortho",
+                    bool log_mels=false);
 
-private:
-    int sample_rate_;
-    int n_fft_;
-    int win_length_;
-    int hop_length_;
-    double f_min_;
-    double f_max_;
-    int pad_;
-    int n_mels_;
-    float power_;
-    bool normalized_;
-    std::string pad_mode_;
-    std::string norm_;
-    std::string mel_scale_1;
-
-    torch::nn::ModuleHolder<Spectrogram> spectrogram_{nullptr};
-    torch::nn::ModuleHolder<MelScale> mel_scale_{nullptr};
-};
 #endif

@@ -7,18 +7,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set the path for Libtorch and Pybind11
 set(CMAKE_PREFIX_PATH "/home/rahim-khan/libtorch")
-set(pybind11_DIR "/home/rahim-khan/miniconda3/envs/ai_repo/lib/python3.12/site-packages/pybind11/share/cmake/pybind11")
+# set(pybind11_DIR "/home/rahim-khan/miniconda3/envs/ai_repo/lib/python3.12/site-packages/pybind11/share/cmake/pybind11")
 
 # Use the new FindPython module and ensure all components are found
-set(PYBIND11_FINDPYTHON ON)  # Enable finding Python
-find_package(Python REQUIRED COMPONENTS Development Interpreter)
+# set(PYBIND11_FINDPYTHON ON)  # Enable finding Python
+# find_package(Python REQUIRED COMPONENTS Development Interpreter)
 
 # Find required packages
 find_package(Torch REQUIRED)
-find_package(pybind11 REQUIRED)
+# find_package(pybind11 REQUIRED)
 
 # Include directories
-include_directories(${Python_INCLUDE_DIRS})
+# include_directories(${Python_INCLUDE_DIRS})
 
 # Find the sndfile library
 find_library(SNDFILE_LIBRARIES NAMES sndfile)
@@ -26,13 +26,14 @@ if(NOT SNDFILE_LIBRARIES)
     message(FATAL_ERROR "libsndfile not found")
 endif()
 
-find_library(TORCHAUDIO_LIB torchaudio HINTS /usr/local/torchaudio/lib)
+# find_library(TORCHAUDIO_LIB torchaudio HINTS /usr/local/torchaudio/lib)
 
 # Add executable and libraries
 add_executable(main main.cpp)
 add_library(net src/net.cpp)
 add_library(read_audio src/read_audio.cpp)
 add_library(spectrogram src/spectrogram.cpp)
+add_library(dataset src/dataset.cpp)
 
 # Link libraries
 target_link_libraries(main 
@@ -43,8 +44,10 @@ target_link_libraries(main
     read_audio 
     ${SNDFILE_LIBRARIES} 
     spectrogram 
-    pybind11::module 
-    ${Python_LIBRARIES}
+    # pybind11::module 
+    # ${Python_LIBRARIES}
+    dataset
+    ${SNDFILE_LIBRARIES} 
 )
 
 
