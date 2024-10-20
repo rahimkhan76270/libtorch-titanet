@@ -26,6 +26,8 @@ if(NOT SNDFILE_LIBRARIES)
     message(FATAL_ERROR "libsndfile not found")
 endif()
 
+find_library(TORCHAUDIO_LIB torchaudio HINTS /usr/local/torchaudio/lib)
+
 # Add executable and libraries
 add_executable(main main.cpp)
 add_library(net src/net.cpp)
@@ -36,6 +38,7 @@ add_library(spectrogram src/spectrogram.cpp)
 target_link_libraries(main 
     PRIVATE 
     "${TORCH_LIBRARIES}" 
+    ${TORCHAUDIO_LIB}
     net 
     read_audio 
     ${SNDFILE_LIBRARIES} 
@@ -43,6 +46,7 @@ target_link_libraries(main
     pybind11::module 
     ${Python_LIBRARIES}
 )
+
 
 # Ensure CMake can find the Torch headers
 include_directories(${CMAKE_SOURCE_DIR}/include ${TORCH_INCLUDE_DIRS})
